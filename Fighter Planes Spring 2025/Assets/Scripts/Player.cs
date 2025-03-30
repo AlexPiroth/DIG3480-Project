@@ -8,7 +8,9 @@ public class Player : MonoBehaviour
     private float horizontalInput;
     private float verticalInput;
     private float horizontalScreenLimit = 9.5f;
-    private float verticalScreenLimit = 6.5f;
+    private float verticalScreenLimitTop = 2f;
+    private float verticalScreenLimitBottom = 3.5f;
+    private float adjustedVerticalInput;
 
     public GameObject bulletPrefab;
 
@@ -27,15 +29,19 @@ public class Player : MonoBehaviour
     {
         horizontalInput = Input.GetAxis("Horizontal");
         verticalInput = Input.GetAxis("Vertical");
-        transform.Translate(new Vector3(horizontalInput, verticalInput, 0) * Time.deltaTime * playerSpeed);
+        // Adjusts vertical input to stay within bounds
+        adjustedVerticalInput = verticalInput;
+        if ((transform.position.y >= verticalScreenLimitTop / 2 && verticalInput > 0) || (transform.position.y <= -verticalScreenLimitBottom && verticalInput < 0))
+        {
+            adjustedVerticalInput = 0;
+        }
+        transform.Translate(new Vector3(horizontalInput, adjustedVerticalInput, 0) * Time.deltaTime * playerSpeed);
         if (transform.position.x >= horizontalScreenLimit || transform.position.x <= -horizontalScreenLimit)
         {
             transform.position = new Vector3(-transform.position.x, transform.position.y, 0);
         }
-        if (transform.position.y >= verticalScreenLimit || transform.position.y <= -verticalScreenLimit)
-        {
-            transform.position = new Vector3(transform.position.x, -transform.position.y, 0);
-        }
+        // Code to wrap around the bottom and top of screen is removed because that isn't possible anymore because of the input adjustment
+
     }
 
     void Shooting()
