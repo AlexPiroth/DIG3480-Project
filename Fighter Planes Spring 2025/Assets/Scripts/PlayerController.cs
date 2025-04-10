@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour
     public int lives;
     private float speed;
     private int weaponType;
+    public bool shieldsUp;
 
     private GameManager gameManager;
 
@@ -57,7 +58,10 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(3f);
         speed = 5f;
         thrusterPrefab.SetActive(false);
-        gameManager.ManagePowerupText(0);
+        if (gameManager.textType == 1)
+        {
+            gameManager.ManagePowerupText(0);
+        }
         gameManager.PlaySound(2);
     }
 
@@ -65,7 +69,21 @@ public class PlayerController : MonoBehaviour
     {
         yield return new WaitForSeconds(3f);
         weaponType = 1;
-        gameManager.ManagePowerupText(0);
+        if (gameManager.textType == 2 || gameManager.textType == 3)
+        {
+            gameManager.ManagePowerupText(0);
+        }
+        gameManager.PlaySound(2);
+    }
+
+    IEnumerator ShieldPowerDown()
+    {
+        yield return new WaitForSeconds(3f);
+        shieldsUp = false;
+        if (gameManager.textType == 4)
+        {
+            gameManager.ManagePowerupText(0);
+        }
         gameManager.PlaySound(2);
     }
 
@@ -97,9 +115,12 @@ public class PlayerController : MonoBehaviour
                     break;
                 case 4:
                     //Picked up shield
-                    //Do I already have a shield?
-                    //If yes: do nothing
-                    //If not: activate the shield's visibility
+                    if (!shieldsUp)
+                    {
+                        shieldsUp = true;
+                        StartCoroutine(ShieldPowerDown());
+                        Instantiate(shieldPrefab);
+                    }
                     gameManager.ManagePowerupText(4);
                     break;
             }

@@ -29,6 +29,7 @@ public class GameManager : MonoBehaviour
 
     public int score;
     public int cloudMove;
+    public int textType = 0;
 
     private bool gameOver;
 
@@ -82,18 +83,23 @@ public class GameManager : MonoBehaviour
         {
             case 1:
                 powerupText.text = "Speed!";
+                textType = 1;
                 break;
             case 2:
                 powerupText.text = "Double Weapon!";
+                textType = 2;
                 break;
             case 3:
                 powerupText.text = "Triple Weapon!";
+                textType = 3;
                 break;
             case 4:
                 powerupText.text = "Shield!";
+                textType = 4;
                 break;
             default:
                 powerupText.text = "No powerups yet!";
+                textType = 0;
                 break;
         }
     }
