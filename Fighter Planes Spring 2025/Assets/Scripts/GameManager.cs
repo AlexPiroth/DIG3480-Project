@@ -65,7 +65,6 @@ public class GameManager : MonoBehaviour
         score = score + earnedScore;
         scoreText.text = "Score: " + score;
     }
-
     public void ChangeLivesText (int currentLives)
     {
         livesText.text = "Lives: " + currentLives;
@@ -89,5 +88,28 @@ public class GameManager : MonoBehaviour
         }
         //Destroy Coin
         Destroy(Coin);
+=======
+    void CreateEnemy()
+    {
+        Instantiate(enemyOnePrefab, new Vector3(Random.Range(-horizontalScreenSize, horizontalScreenSize) * 0.9f, verticalScreenSize, 0), Quaternion.Euler(180, 0, 0));
+    }
+
+    void CreateSky()
+    {
+        for (int i = 0; i < 30; i++)
+        {
+            Instantiate(cloudPrefab, new Vector3(Random.Range(-horizontalScreenSize, horizontalScreenSize), Random.Range(-verticalScreenSize, verticalScreenSize), 0), Quaternion.identity);
+        }
+        
+    }
+    public void AddScore(int earnedScore)
+    {
+        score = score + earnedScore;
+        scoreText.text = "Score: " + score;
+    }
+
+    public void ChangeLivesText (int currentLives)
+    {
+        livesText.text = "Lives: " + currentLives;
     }
 }
