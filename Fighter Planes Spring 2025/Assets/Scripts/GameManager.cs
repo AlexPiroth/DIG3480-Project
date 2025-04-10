@@ -34,9 +34,61 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if(playerIsAlive)
+        {
+            //make sure coin isn't on screen
+            if(Coin == null)
+            {
+                SpawnObject();
+                //Pause for 6s
+                WaitForSeconds(5f);
+                CoinUpdate();
+            }          
+        }
     }
 
+    void CreateEnemy()
+    {
+        Instantiate(enemyOnePrefab, new Vector3(Random.Range(-horizontalScreenSize, horizontalScreenSize) * 0.9f, verticalScreenSize, 0), Quaternion.Euler(180, 0, 0));
+    }
+
+    void CreateSky()
+    {
+        for (int i = 0; i < 30; i++)
+        {
+            Instantiate(cloudPrefab, new Vector3(Random.Range(-horizontalScreenSize, horizontalScreenSize), Random.Range(-verticalScreenSize, verticalScreenSize), 0), Quaternion.identity);
+        }
+        
+    }
+    public void AddScore(int earnedScore)
+    {
+        score = score + earnedScore;
+        scoreText.text = "Score: " + score;
+    }
+    public void ChangeLivesText (int currentLives)
+    {
+        livesText.text = "Lives: " + currentLives;
+    }
+
+
+    void SpawnObject()
+        {
+            //Randomizes position
+            Vector3 randomPosition = new Vector3(Random.Range(0, 10f), 0, Random.Range(0, 6.5f));
+            //Create Coin
+            Instantiate(Coin, randomPosition, Quaternion.identity);
+        }
+
+    void CoinUpdate()
+    {
+        if(collision.gameObject.CompareTag("Coin"))
+        {
+            //Calls AddScore Function to add 1 to score
+            AddScore(1);
+        }
+        //Destroy Coin
+        Destroy(Coin);
+=======
     void CreateEnemy()
     {
         Instantiate(enemyOnePrefab, new Vector3(Random.Range(-horizontalScreenSize, horizontalScreenSize) * 0.9f, verticalScreenSize, 0), Quaternion.Euler(180, 0, 0));
