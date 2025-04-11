@@ -16,11 +16,13 @@ public class GameManager : MonoBehaviour
     public GameObject gameOverText;
     public GameObject restartText;
     public GameObject powerupPrefab;
+    public GameObject coinPrefab;
     public GameObject audioPlayer;
     public GameObject activePlayer;
 
     public AudioClip powerupSound;
     public AudioClip powerdownSound;
+    public AudioClip coinSound;
 
     public TextMeshProUGUI livesText;
     public TextMeshProUGUI scoreText;
@@ -54,6 +56,7 @@ public class GameManager : MonoBehaviour
         InvokeRepeating("CreateEnemyOne", 1, 3);
         InvokeRepeating("CreateEnemyTwo", 5, 4);
         StartCoroutine(SpawnPowerup());
+        StartCoroutine(SpawnCoin());
         powerupText.text = "No powerups yet!";
     }
 
@@ -84,6 +87,11 @@ public class GameManager : MonoBehaviour
     void CreatePowerup()
     {
         Instantiate(powerupPrefab, new Vector3(Random.Range(-horizontalScreenSize * 0.8f, horizontalScreenSize * 0.8f), Random.Range(playerController.playerScreenBottom * 0.8f, playerController.playerScreenTop * 0.8f), 0), Quaternion.identity);
+    }
+
+    void CreateCoin()
+    {
+        Instantiate(coinPrefab, new Vector3(Random.Range(-horizontalScreenSize * 0.8f, horizontalScreenSize * 0.8f), Random.Range(playerController.playerScreenBottom * 0.8f, playerController.playerScreenTop * 0.8f), 0), Quaternion.identity);
     }
 
     void CreateSky()
@@ -130,6 +138,14 @@ public class GameManager : MonoBehaviour
         StartCoroutine(SpawnPowerup());
     }
 
+    IEnumerator SpawnCoin()
+    {
+        float spawnTime = Random.Range(1, 7);
+        yield return new WaitForSeconds(spawnTime);
+        CreateCoin();
+        StartCoroutine(SpawnCoin());
+    }
+
     public void PlaySound(int whichSound)
     {
         switch (whichSound)
@@ -139,6 +155,9 @@ public class GameManager : MonoBehaviour
                 break;
             case 2:
                 audioPlayer.GetComponent<AudioSource>().PlayOneShot(powerdownSound);
+                break;
+            case 3:
+                audioPlayer.GetComponent<AudioSource>().PlayOneShot(coinSound);
                 break;
         }
     }
