@@ -9,6 +9,8 @@ public class PlayerController : MonoBehaviour
     private float speed;
     private int weaponType;
     public bool shieldsUp;
+    public float playerScreenTop;
+    public float playerScreenBottom;
 
     private GameManager gameManager;
 
@@ -20,6 +22,7 @@ public class PlayerController : MonoBehaviour
     public GameObject thrusterPrefab;
     public GameObject shieldPrefab;
 
+
     // Start is called before the first frame update
     void Start()
     {
@@ -28,6 +31,8 @@ public class PlayerController : MonoBehaviour
         speed = 5.0f;
         weaponType = 1;
         gameManager.ChangeLivesText(lives);
+        playerScreenTop = 1f;
+        playerScreenBottom = -3.6f;
     }
 
     // Update is called once per frame
@@ -151,22 +156,21 @@ public class PlayerController : MonoBehaviour
 
     void Movement()
     {
+        float horizontalScreenSize = gameManager.horizontalScreenSize;
         horizontalInput = Input.GetAxis("Horizontal");
-        verticalInput = Input.GetAxis("Vertical");
+        if ((Input.GetAxis("Vertical") > 0 && transform.position.y >= playerScreenTop) || (Input.GetAxis("Vertical") < 0 && transform.position.y <= playerScreenBottom)) {
+            verticalInput = 0;
+        }
+        else {
+            verticalInput = Input.GetAxis("Vertical"); 
+        }
         transform.Translate(new Vector3(horizontalInput, verticalInput, 0) * Time.deltaTime * speed);
 
-        float horizontalScreenSize = gameManager.horizontalScreenSize;
-        float verticalScreenSize = gameManager.verticalScreenSize;
+
 
         if (transform.position.x <= -horizontalScreenSize || transform.position.x > horizontalScreenSize)
         {
             transform.position = new Vector3(transform.position.x * -1, transform.position.y, 0);
         }
-
-        if (transform.position.y <= -verticalScreenSize || transform.position.y > verticalScreenSize)
-        {
-            transform.position = new Vector3(transform.position.x, transform.position.y * -1, 0);
-        }
-
     }
 }
